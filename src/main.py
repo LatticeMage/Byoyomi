@@ -1,5 +1,4 @@
 # main.py
-
 import sys
 from PySide6.QtWidgets import (
     QApplication,
@@ -39,11 +38,15 @@ class MainWindow(QWidget):
 
         self.capture_timer = QTimer(self)
         self.capture_timer.timeout.connect(self.update_frame)
-        self.capture_timer.start(1000)
+        self.capture_timer.start(1000) # Capture every 1 second
 
         # Start the mouse click listener thread
         self.mouse_listener_thread = threading.Thread(target=self.start_mouse_listener, daemon=True)
         self.mouse_listener_thread.start()
+        
+        self.diff_label = QLabel("Diff: 0", self)
+        layout.addWidget(self.diff_label)
+        self.diff_label.setAlignment(Qt.AlignmentFlag.AlignBottom | Qt.AlignmentFlag.AlignRight)
 
     def update_frame(self):
         label_rect = self.image_label.contentsRect()
@@ -51,13 +54,14 @@ class MainWindow(QWidget):
         label_height = label_rect.height()
 
         if label_width <= 0 or label_height <= 0:
-           return
+            return
         
-        q_img = self.screen_capture.capture_and_resize(label_width, label_height)
+        pixmap, diff_count = self.screen_capture.capture_and_resize(label_width, label_height)
         
-        if q_img:
-            pixmap = QPixmap.fromImage(q_img)
+        if pixmap:
             self.image_label.setPixmap(pixmap)
+        
+        self.diff_label.setText(f"Diff: {diff_count}")
 
     def start_mouse_listener(self):
         """Starts the mouse listener thread using pynput."""

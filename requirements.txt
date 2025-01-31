@@ -3,3 +3,4 @@ pyttsx3
 mss
 pillow
 pynput
+numpy
