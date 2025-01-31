@@ -26,4 +26,3 @@ class GameState:
         if new_state not in self.possible_states:
             raise ValueError(f"Invalid state '{new_state}'.  Must be one of: {self.possible_states}")
         self.state = new_state
-

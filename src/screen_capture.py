@@ -29,4 +29,4 @@ class ScreenCapture:
             
             self.last_image_data = current_image_data
             
-            return diff_count
+            return diff_count / 4

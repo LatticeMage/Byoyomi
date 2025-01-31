@@ -17,16 +17,18 @@ class SpeechButton(QPushButton):
         self.game_state = GameState()
 
     def start_countdown(self):
+        if self.game_state.get_state() != "Human Playing":
+             return
+        
         if self.is_counting:
             self.stop_countdown() # Stop if button is press again while counting.
 
-        self.game_state.set_state("Human Playing")
         self.is_counting = True  # Set the flag to true again
         self.countdown_thread = threading.Thread(target=self._countdown_speech)
         self.countdown_thread.start()
 
     def _countdown_speech(self):
-      countdown_numbers = ["十", "九", "八", "七", "六", "五", "四", "三", "二", "一"]
+      countdown_numbers = ["九", "八", "七", "六", "五", "四", "三", "二", "一"]
       start_time = time.time()
       for i, number in enumerate(countdown_numbers):
         if not self.is_counting or self.game_state.get_state() != "Human Playing":
